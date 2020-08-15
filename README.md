@@ -1,6 +1,8 @@
 # theta_mpeg_viewer
 
-Viewer for motionJPEG stream from RICOH THETA
+Viewer for motionJPEG stream from RICOH THETA SC2
+
+Tested with firmware 1.31
 
 ## Reference
 
