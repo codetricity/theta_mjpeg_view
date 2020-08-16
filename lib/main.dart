@@ -43,7 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
   );
 
-  void _incrementFrame() {
+  bool playing = false;
+
+  void _playThetaPreview() {
     int duration = 300;
 
     int counter = 0;
@@ -68,51 +70,68 @@ class _MyHomePageState extends State<MyHomePage> {
     StreamSubscription videoStream;
     client.head(url, headers: headers);
 
-    client.send(request).then(
-      (response) {
-        var startIndex = -1;
-        var endIndex = -1;
-        List<int> buf = List<int>();
-        videoStream = response.stream.listen((List<int> data) {
-          hex.encode(data);
-          for (var i = 0; i < data.length - 1; i++) {
-            // print(data[i]);
-            if (data[i] == 0xff && data[i + 1] == 0xd8) {
-              startIndex = buf.length + i;
-            }
-            if (data[i] == 0xff && data[i + 1] == 0xd9) {
-              endIndex = buf.length + i;
-            }
-          }
-          buf.addAll(data);
-          if (startIndex != -1 && endIndex != -1) {
-            // print('$startIndex, $endIndex, ${buf.length}');
-            timer.stop();
-            ts = timer.elapsed;
-            if (ts.inMilliseconds > 100) {
-              timer.reset();
-              print("100 ms elapsed: $counter");
-              if (counter < duration) {
-                print('writing frame $counter at 6fps');
-                setState(() {
-                  frameImage = Image.memory(
-                      Uint8List.fromList(buf.sublist(73, buf.length)));
-                  // frameImage = Image.network(
-                  //     'https://picsum.photos/seed/$counter/300/200');
-                });
-                counter++;
+    if (!playing ) {
+      playing = true;
+      client.send(request).then(
+            (response) {
+          var startIndex = -1;
+          var endIndex = -1;
+          List<int> buf = List<int>();
+          videoStream = response.stream.listen((List<int> data) {
+            if (playing) {
+              hex.encode(data);
+              for (var i = 0; i < data.length - 1; i++) {
+                // print(data[i]);
+                if (data[i] == 0xff && data[i + 1] == 0xd8) {
+                  startIndex = buf.length + i;
+                }
+                if (data[i] == 0xff && data[i + 1] == 0xd9) {
+                  endIndex = buf.length + i;
+                }
               }
+              buf.addAll(data);
+              if (startIndex != -1 && endIndex != -1) {
+                // print('$startIndex, $endIndex, ${buf.length}');
+                timer.stop();
+                ts = timer.elapsed;
+                if (ts.inMilliseconds > 100) {
+                  timer.reset();
+                  print("100 ms elapsed: $counter");
+//              if (counter < duration) {
+                  print('writing frame $counter at 6fps');
+                  setState(() {
+                    frameImage = Image.memory(
+                        Uint8List.fromList(buf.sublist(73, buf.length)));
+                    // frameImage = Image.network(
+                    //     'https://picsum.photos/seed/$counter/300/200');
+                  });
+//                counter++;
+                }
+                startIndex = -1;
+                endIndex = -1;
+                buf = List<int>();
+                timer.start();
+              } else {
+                // print('start index is -1');
+              }
+            } else {
+              // not playing at this point
+              timer?.stop();
+              videoStream?.cancel();
+              client?.close();
             }
-            startIndex = -1;
-            endIndex = -1;
-            buf = List<int>();
-            timer.start();
-          } else {
-            // print('start index is -1');
-          }
-        });
-      },
-    );
+          });
+        },
+      );
+    }
+  }
+
+  void _stopThetaPreview() {
+    setState(() {
+      playing = false;
+    });
+
+    print("stopping stream");
   }
 
   @override
@@ -129,10 +148,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementFrame,
+      floatingActionButton: !playing ? FloatingActionButton(
+        onPressed: _playThetaPreview,
         child: Icon(Icons.play_arrow),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ) :
+      FloatingActionButton(
+        onPressed: _stopThetaPreview,
+        child: Icon(Icons.stop),
+      ),
     );
   }
 }
