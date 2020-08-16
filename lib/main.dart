@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './controller/take_picture.dart';
-import './controller/get_live_preview.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:convert/convert.dart';
 import 'dart:typed_data';
 
@@ -18,12 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'THETA SC2',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'THETA MotionJPEG'),
+      home: MyHomePage(title: 'THETA SC2 MotionJPEG'),
     );
   }
 }
