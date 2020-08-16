@@ -47,10 +47,10 @@ class _MyHomePageState extends State<MyHomePage> {
     Duration ts;
     Stopwatch timer = Stopwatch();
 
-    Stopwatch totalPlayTime = Stopwatch();
+//    Stopwatch totalPlayTime = Stopwatch();
 
     timer.start();
-    totalPlayTime.start();
+//    totalPlayTime.start();
 
     Uri url = Uri.parse('http://192.168.1.1/osc/commands/execute');
     var request = http.Request('POST', url);
@@ -98,11 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     Uint8List.fromList(
                       buf.sublist(frameStartIndex, buf.length),
                     ),
+                    gaplessPlayback: true,
                   );
-                  precacheImage(cachedImage.image, context);
+                  print(cachedImage.height);
+                    precacheImage(cachedImage.image, context);
+
+
                   setState(() {
                     frameImage = cachedImage;
-                    elapsedTime = totalPlayTime.elapsedMilliseconds ~/ 1000;
+//                    elapsedTime = totalPlayTime.elapsedMilliseconds ~/ 1000;
                   });
                 }
                 startIndex = -1;
@@ -169,10 +173,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Text('Elapsed Time: $elapsedTime',
-            style: TextStyle(
-                fontSize: 30.0),
-            ),
+//            Text('Elapsed Time: $elapsedTime',
+//            style: TextStyle(
+//                fontSize: 30.0),
+//            ),
 
           ],
         ),

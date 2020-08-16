@@ -10,6 +10,11 @@ Tested with firmware 1.31
 Rewrite app to isolate updating of stateful widgets.  The counter at the buttom
 is likely causing white flickers to the screen.
 
+## gaplessPlayback
+
+Implemented 
+[gaplessPlayback](https://api.flutter.dev/flutter/widgets/Image/gaplessPlayback.html) property.
+
 ## precacheImage
 
 I used [precacheImage](https://api.flutter.dev/flutter/widgets/precacheImage.html) to eliminate a white flickering problem.  
