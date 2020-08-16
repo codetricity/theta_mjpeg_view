@@ -39,15 +39,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Image frameImage = Image.asset('assets/images/oppkey-logo.png');
-
   bool playing = false;
+  int delayBetweenFrames = 200;
+  int elapsedTime = 0;
+
 
   void _playThetaPreview() {
     int counter = 0;
     Duration ts;
     Stopwatch timer = Stopwatch();
 
+    Stopwatch totalPlayTime = Stopwatch();
+
     timer.start();
+    totalPlayTime.start();
 
     Uri url = Uri.parse('http://192.168.1.1/osc/commands/execute');
     var request = http.Request('POST', url);
@@ -63,10 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
     StreamSubscription videoStream;
     client.head(url, headers: headers);
 
-    if (!playing ) {
+    if (!playing) {
       playing = true;
       client.send(request).then(
-            (response) {
+        (response) {
           var startIndex = -1;
           var endIndex = -1;
           List<int> buf = List<int>();
@@ -87,12 +92,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 // print('$startIndex, $endIndex, ${buf.length}');
                 timer.stop();
                 ts = timer.elapsed;
-                if (ts.inMilliseconds > 200) {
+                if (ts.inMilliseconds > delayBetweenFrames) {
                   timer.reset();
-                  print("200 ms elapsed. Frame: $counter. 5fps");
+                  print("$delayBetweenFrames ms elapsed. Frame: $counter. ${1000/delayBetweenFrames}fps");
+                  Image cachedImage = Image.memory(
+                    Uint8List.fromList(
+                      buf.sublist(73, buf.length),
+                    ),
+                  );
+                  precacheImage(cachedImage.image, context);
                   setState(() {
-                    frameImage = Image.memory(
-                        Uint8List.fromList(buf.sublist(73, buf.length)));
+                    frameImage = cachedImage;
+                    elapsedTime = totalPlayTime.elapsedMilliseconds ~/ 1000;
                   });
                 }
                 startIndex = -1;
@@ -122,6 +133,15 @@ class _MyHomePageState extends State<MyHomePage> {
     print("stopping stream");
   }
 
+  void _changeFps(int fps) {
+    setState(() {
+      // the ~/ notation converts to int from double and is
+      // more efficient than .toInt()
+      delayBetweenFrames = 1000 ~/ fps;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,17 +153,40 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             frameImage,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RaisedButton(
+                  onPressed: () { _changeFps(5); },
+                  child: Text('5fps'),
+                ),
+                RaisedButton(
+                  onPressed: (){ _changeFps(10);},
+                  child: Text('10fps'),
+                ),
+                RaisedButton(
+                  onPressed: (){ _changeFps(20);},
+                  child: Text('20fps'),
+                ),
+              ],
+            ),
+            Text('Elapsed Time: $elapsedTime',
+            style: TextStyle(
+                fontSize: 30.0),
+            ),
+
           ],
         ),
       ),
-      floatingActionButton: !playing ? FloatingActionButton(
-        onPressed: _playThetaPreview,
-        child: Icon(Icons.play_arrow),
-      ) :
-      FloatingActionButton(
-        onPressed: _stopThetaPreview,
-        child: Icon(Icons.stop),
-      ),
+      floatingActionButton: !playing
+          ? FloatingActionButton(
+              onPressed: _playThetaPreview,
+              child: Icon(Icons.play_arrow),
+            )
+          : FloatingActionButton(
+              onPressed: _stopThetaPreview,
+              child: Icon(Icons.stop),
+            ),
     );
   }
 }
