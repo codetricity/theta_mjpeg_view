@@ -38,18 +38,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Image frameImage = Image(
-    image: NetworkImage(
-        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-  );
+  Image frameImage = Image.asset('assets/images/oppkey-logo.png');
 
   bool playing = false;
 
   void _playThetaPreview() {
-    int duration = 300;
-
     int counter = 0;
-
     Duration ts;
     Stopwatch timer = Stopwatch();
 
@@ -59,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
     var request = http.Request('POST', url);
 
     Map<String, String> bodyMap = {"name": "camera.getLivePreview"};
-    // request.bodyFields = bodyMap;
     request.body = jsonEncode(bodyMap);
 
     Map<String, String> headers = {
@@ -94,18 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 // print('$startIndex, $endIndex, ${buf.length}');
                 timer.stop();
                 ts = timer.elapsed;
-                if (ts.inMilliseconds > 100) {
+                if (ts.inMilliseconds > 200) {
                   timer.reset();
-                  print("100 ms elapsed: $counter");
-//              if (counter < duration) {
-                  print('writing frame $counter at 6fps');
+                  print("200 ms elapsed. Frame: $counter. 5fps");
                   setState(() {
                     frameImage = Image.memory(
                         Uint8List.fromList(buf.sublist(73, buf.length)));
-                    // frameImage = Image.network(
-                    //     'https://picsum.photos/seed/$counter/300/200');
                   });
-//                counter++;
                 }
                 startIndex = -1;
                 endIndex = -1;
