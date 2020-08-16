@@ -7,10 +7,8 @@ Viewer for motionJPEG stream from RICOH THETA SC2
 Tested with firmware 1.31
 
 ## Status
-
-buffer is holding the header of the JPEG frame and I need to 
-grab the sublist from element 73 of the array.  Plan to rewrite
-this to look for the start of the frame at FF D8 again.
+Rewrite app to isolate updating of stateful widgets.  The counter at the buttom
+is likely causing white flickers to the screen.
 
 ## precacheImage
 

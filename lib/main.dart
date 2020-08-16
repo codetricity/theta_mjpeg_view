@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool playing = false;
   int delayBetweenFrames = 200;
   int elapsedTime = 0;
+  int frameStartIndex;
 
 
   void _playThetaPreview() {
@@ -79,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 // print(data[i]);
                 if (data[i] == 0xff && data[i + 1] == 0xd8) {
                   startIndex = buf.length + i;
+                  frameStartIndex = i;
                 }
                 if (data[i] == 0xff && data[i + 1] == 0xd9) {
                   endIndex = buf.length + i;
@@ -94,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   print("$delayBetweenFrames ms elapsed. Frame: $counter. ${1000/delayBetweenFrames}fps");
                   Image cachedImage = Image.memory(
                     Uint8List.fromList(
-                      buf.sublist(73, buf.length),
+                      buf.sublist(frameStartIndex, buf.length),
                     ),
                   );
                   precacheImage(cachedImage.image, context);
