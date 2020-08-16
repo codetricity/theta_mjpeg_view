@@ -1,6 +1,6 @@
 # theta_mpeg_viewer
 
-![Screenshot of MotionJPEG Viewer](doc/images/motion3.gif)
+![Screenshot of MotionJPEG Viewer](doc/images/motion_5.gif)
 
 Viewer for motionJPEG stream from RICOH THETA SC2
 
