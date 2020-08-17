@@ -38,8 +38,34 @@ class _MyHomePageState extends State<MyHomePage> {
   Image frameImage = Image.asset('assets/images/oppkey-logo.png');
   bool playing = false;
   int delayBetweenFrames = 200;
-  int elapsedTime = 0;
+  String elapsedTime = '0';
   int frameStartIndex;
+
+  Stopwatch totalPlayTime = Stopwatch();
+  final Duration elapsedDuration = Duration(seconds: 1);
+
+  void keepGoing(timer) {
+    setState(() {
+      elapsedTime = timer.tick.toString();
+    });
+
+  }
+
+  void resetElapsedTime() {
+    setState(() {
+      elapsedTime = '0';
+    });
+  }
+
+  void startElapsedTimer() {
+    Timer.periodic(elapsedDuration, (timer) {
+      if (playing) {
+        keepGoing(timer);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
 
 
   void _playThetaPreview() {
@@ -47,11 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Duration ts;
     Stopwatch timer = Stopwatch();
 
-//    Stopwatch totalPlayTime = Stopwatch();
+
 
     timer.start();
-//    totalPlayTime.start();
-
     Uri url = Uri.parse('http://192.168.1.1/osc/commands/execute');
     var request = http.Request('POST', url);
 
@@ -68,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!playing) {
       playing = true;
+      startElapsedTimer();
       client.send(request).then(
         (response) {
           var startIndex = -1;
@@ -93,34 +118,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 ts = timer.elapsed;
                 if (ts.inMilliseconds > delayBetweenFrames) {
                   timer.reset();
-                  print("$delayBetweenFrames ms elapsed. Frame: $counter. ${1000/delayBetweenFrames}fps");
+//                  print("$delayBetweenFrames ms elapsed. Frame: $counter. ${1000/delayBetweenFrames}fps");
                   Image cachedImage = Image.memory(
                     Uint8List.fromList(
                       buf.sublist(frameStartIndex, buf.length),
                     ),
                     gaplessPlayback: true,
                   );
-                  print(cachedImage.height);
                     precacheImage(cachedImage.image, context);
 
 
                   setState(() {
                     frameImage = cachedImage;
-//                    elapsedTime = totalPlayTime.elapsedMilliseconds ~/ 1000;
                   });
+
+
                 }
                 startIndex = -1;
                 endIndex = -1;
                 buf = List<int>();
                 timer.start();
-              } else {
-                // print('start index is -1');
               }
             } else {
               // not playing at this point
               timer?.stop();
+              totalPlayTime?.stop();
               videoStream?.cancel();
               client?.close();
+              resetElapsedTime();
             }
           });
         },
@@ -173,10 +198,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-//            Text('Elapsed Time: $elapsedTime',
-//            style: TextStyle(
-//                fontSize: 30.0),
-//            ),
+            Text('Elapsed Time: $elapsedTime',
+            style: TextStyle(
+                fontSize: 30.0),
+            ),
 
           ],
         ),
