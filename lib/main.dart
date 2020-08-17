@@ -38,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Image frameImage = Image.asset('assets/images/oppkey-logo.png');
   bool playing = false;
   int delayBetweenFrames = 200;
+  String fpsDisplay = '5fps';
   String elapsedTime = '0';
   int frameStartIndex;
 
@@ -166,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // the ~/ notation converts to int from double and is
       // more efficient than .toInt()
       delayBetweenFrames = 1000 ~/ fps;
+      fpsDisplay = '${fps.toString()}fps';
     });
   }
 
@@ -202,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(
                 fontSize: 30.0),
             ),
+            Text(fpsDisplay),
 
           ],
         ),
