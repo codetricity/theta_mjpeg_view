@@ -1,10 +1,25 @@
 # RICOH THETA SC2 MotionJPEG LivePreview
 
-![Screenshot of MotionJPEG Viewer](doc/images/motion_5.gif)
-
 Viewer for motionJPEG stream from RICOH THETA SC2
 
 Tested with firmware 1.31
+
+
+## Landscape Mode 
+
+![landscape mode screenshot](doc/images/motion_6.gif)
+
+MotionJPEG demo on Android AVD displaying video on laptop to show how the app can display motion.  
+Imagine you have the THETA SC2 out capturing a real surf scene instead of a simulated
+session on a laptop.
+
+## Portrait Mode
+
+![Screenshot of MotionJPEG Viewer](doc/images/motion_5.gif)
+
+Portrait mode adds buttons to change the fps for testing.
+Elapsed time since the start of the MotionJPEG test session is
+also displayed.
 
 ## ToDo
 
