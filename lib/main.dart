@@ -49,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       elapsedTime = timer.tick.toString();
     });
-
   }
 
   void resetElapsedTime() {
@@ -68,13 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   void _playThetaPreview() {
-    int counter = 0;
+    // int counter = 0;
     Duration ts;
     Stopwatch timer = Stopwatch();
-
-
 
     timer.start();
     Uri url = Uri.parse('http://192.168.1.1/osc/commands/execute');
@@ -126,14 +122,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     gaplessPlayback: true,
                   );
-                    precacheImage(cachedImage.image, context);
-
+                  precacheImage(cachedImage.image, context);
 
                   setState(() {
                     frameImage = cachedImage;
                   });
-
-
                 }
                 startIndex = -1;
                 endIndex = -1;
@@ -171,9 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
+    bool portrait =
+        (MediaQuery.of(context).orientation == Orientation.portrait);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -183,29 +177,36 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(child: frameImage),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RaisedButton(
-                  onPressed: () { _changeFps(5); },
-                  child: Text('5fps'),
-                ),
-                RaisedButton(
-                  onPressed: (){ _changeFps(10);},
-                  child: Text('10fps'),
-                ),
-                RaisedButton(
-                  onPressed: (){ _changeFps(20);},
-                  child: Text('20fps'),
-                ),
-              ],
-            ),
-            Text('Elapsed Time: $elapsedTime',
-            style: TextStyle(
-                fontSize: 30.0),
+            portrait
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {
+                          _changeFps(5);
+                        },
+                        child: Text('5fps'),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          _changeFps(10);
+                        },
+                        child: Text('10fps'),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          _changeFps(20);
+                        },
+                        child: Text('20fps'),
+                      ),
+                    ],
+                  )
+                : null,
+            Text(
+              'Elapsed Time: $elapsedTime',
+              style: TextStyle(fontSize: 30.0),
             ),
             Text(fpsDisplay),
-
           ],
         ),
       ),

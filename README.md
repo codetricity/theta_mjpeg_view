@@ -8,7 +8,7 @@ Tested with firmware 1.31
 
 ## ToDo
 
-- Rewrite app to isolate updating of stateful widgets, which may improve updating. Though, it seems 
+- Rewrite app to isolate updating of stateful widgets, which may improve updating. Though, it seems
 to work great now with the gaplessPlayback and precacheImage implementation
 - change fps button color when selected.
 - figure out why app only works on SC2 and not on V/Z1.  The http request doesn't return
@@ -28,7 +28,8 @@ Implemented
 
 I used [precacheImage](https://api.flutter.dev/flutter/widgets/precacheImage.html) to eliminate a white flickering problem.  
 I'm not sure when the cache is cleared or if the physical 
-device will run out of memory.
+device will run out of memory.  I've tested it for continous streaming for 10 minutes.
+
 
 ```dart
 Image cachedImage = Image.memory(
