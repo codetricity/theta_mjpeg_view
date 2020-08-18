@@ -169,17 +169,23 @@ class _MyHomePageState extends State<MyHomePage> {
     bool portrait =
         (MediaQuery.of(context).orientation == Orientation.portrait);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(child: frameImage),
+            portrait ? Container(
+              padding: EdgeInsets.only(top: 100.0),
+              child: Container(
+                child: Text('THETA SC2 Live Preview Demo',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  textAlign: TextAlign.center,
+                ),
+              ),) : Container(),
+            portrait ? Container(child: frameImage) : Expanded(child: frameImage),
             portrait
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RaisedButton(
                         onPressed: () {
@@ -201,12 +207,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   )
-                : null,
-            Text(
+                : Container(),
+            portrait ?  Text(
               'Elapsed Time: $elapsedTime',
               style: TextStyle(fontSize: 30.0),
-            ),
-            Text(fpsDisplay),
+            ) : Container(),
+            portrait ? Text(fpsDisplay) : Container(),
           ],
         ),
       ),
