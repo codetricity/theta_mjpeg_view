@@ -62,6 +62,26 @@ setState(() {
 });
 ```
 
+## Navigation of Equirectangular Stream
+
+* [Amelia Viewer A-Frame Project](https://community.theta360.guide/t/successful-theta-v-stream-from-drone-to-vr-headset-0-25-miles-away/4437?u=craig)
+* [Unity project from 2016](https://community.theta360.guide/t/theta-s-wifi-streaming-with-unity/262?u=craig)
+* [Possible use Panorama in Flutter](https://github.com/codetricity/ricoh-theta-flutter-panorama-image-example)
+
+## Packaging and Release
+
+- Attempt to use [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
+- [Android deployment](https://flutter.dev/docs/deployment/android)
+- release files are in `/build/app/outputs/flutter-apk`
+
+modern Android phones such as Google Pixel should use `app-arm64-v8a-release.apk`
+
+```
+app.apk       app-arm64-v8a-release.apk    app-debug.apk
+app.apk.sha1  app-armeabi-v7a-release.apk  app-x86_64-release.apk
+```
+
+
 ## More Information
 
 [RICOH THETA SC2 Developer Community Site](https://theta360.guide/special/sc2/)
