@@ -15,11 +15,15 @@ session on a laptop.
 
 ## Portrait Mode
 
-![Screenshot of MotionJPEG Viewer](doc/images/motion_5.gif)
+![Screenshot of MotionJPEG Viewer](doc/images/motion_7.gif)
 
 Portrait mode adds buttons to change the fps for testing.
 Elapsed time since the start of the MotionJPEG test session is
 also displayed.
+
+Elapsed time is useful to test if the MotionJPEG stream stops.
+The stream did not stop in my tests unless another command
+such as take picture was given.
 
 ## ToDo
 
