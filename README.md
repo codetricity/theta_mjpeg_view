@@ -42,3 +42,7 @@ setState(() {
   frameImage = cachedImage;
 });
 ```
+
+## More Information
+
+[RICOH THETA SC2 Developer Community Site](https://theta360.guide/special/sc2/)
