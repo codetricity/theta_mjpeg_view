@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'dart:typed_data';
+import 'package:theta_mpeg_viewer/commands/take_picture.dart';
 
 void main() {
   runApp(MyApp());
@@ -164,6 +165,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _takePictureRestart() async {
+    await takePicture();
+
+
+    //TODO: implement check for status of camera
+    Future.delayed(Duration(milliseconds: 5000), (){
+      print('stop preview');
+      _stopThetaPreview();
+    });
+
+
+    Future.delayed(Duration(milliseconds: 5000), (){
+      print('attempt to start preview');
+      _playThetaPreview();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool portrait =
@@ -172,17 +190,23 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            portrait ? Container(
-              padding: EdgeInsets.only(top: 100.0),
-              child: Container(
-                child: Text('THETA SC2 Live Preview Demo',
-                    style: TextStyle(
-                      fontSize: 20.0,
+            portrait
+                ? Container(
+                    padding: EdgeInsets.only(top: 100.0),
+                    child: Container(
+                      child: Text(
+                        'THETA SC2 Live Preview Demo',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  textAlign: TextAlign.center,
-                ),
-              ),) : Container(),
-            portrait ? Container(child: frameImage) : Expanded(child: frameImage),
+                  )
+                : Container(),
+            portrait
+                ? Container(child: frameImage)
+                : Expanded(child: frameImage),
             portrait
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,11 +232,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   )
                 : Container(),
-            portrait ?  Text(
-              'Elapsed Time: $elapsedTime',
-              style: TextStyle(fontSize: 30.0),
-            ) : Container(),
+            portrait
+                ? Text(
+                    'Elapsed Time: $elapsedTime',
+                    style: TextStyle(fontSize: 30.0),
+                  )
+                : Container(),
             portrait ? Text(fpsDisplay) : Container(),
+            portrait
+                ? Column(
+                    children: [
+                      FlatButton(
+                          onPressed: takePicture,
+                            child: Text('Take Picture - API call stops livePreview')
+                          ,),
+//                      FlatButton(
+//                        onPressed: _takePictureRestart,
+//                        child: Text('Take Picture - Restart'),
+//                      ),
+                    ],
+                  )
+                : Container(),
           ],
         ),
       ),
